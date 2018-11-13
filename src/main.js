@@ -7,8 +7,20 @@ import router from "./router"
 
 // 集成element-ui
 import ElementUI from "element-ui"
-import './assets/theme/element-#CBE80B/index.css'
+import './assets/theme/element-#409eff/index.css'
 Vue.use(ElementUI)
+
+// 引入字体
+import 'font-awesome/css/font-awesome.min.css'
+
+// 引入axios
+import axios from 'axios'
+Vue.prototype.$axios = axios
+
+// 开发模式开启mock.js
+if (process.env.NODE_ENV === 'development') {
+  //require('./mock')
+}
 
 Vue.config.productionTip = false
 
