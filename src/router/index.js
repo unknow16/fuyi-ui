@@ -18,6 +18,8 @@ import ChildSlotNamed from '@/components/ChildSlotNamed'
 import ParentSlotScope from '@/components/ParentSlotScope'
 import ChildSlotScope from '@/components/ChildSlotScope'
 
+import VuexParent from '@/demo/vuex/VuexParent'
+
 let routes = [
   {
     path: '/',
@@ -108,6 +110,20 @@ routes.push({
       path: '/demo/slot6',
       component: ChildSlotScope,
       name: 'ChildSlotScope'
+    }
+  ]
+})
+
+routes.push({
+  path: '/vuexDemo',
+  name: 'VuexDemo',
+  component: Main,
+  iconCls: 'fa fa-user-circle-o',
+  children: [
+    {
+      path: '/vuexDemo/vuexParent',
+      name: 'VuexParent',
+      component: VuexParent
     }
   ]
 })

@@ -2,8 +2,11 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
-// 导入路由表
+// 引入路由表
 import router from "./router"
+
+// 引入vuex
+import store from './vuex'
 
 // 集成element-ui
 import ElementUI from "element-ui"
@@ -31,6 +34,7 @@ import App from './App'
 new Vue({
   el: '#app', // 4.App组件中内容填充到index.html的id为app的div中
   router,
+  store,
   components: { App }, // 2.声明组件
   template: '<App/>' // 3.模版中使用，因为main.js为js文件,只能用属性声明
 })
