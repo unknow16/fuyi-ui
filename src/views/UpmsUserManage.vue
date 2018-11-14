@@ -26,20 +26,50 @@
               stripe border highlight-current-row 
               v-loading="pageLoading">
       <el-table-column prop="userId" 
-                      label="用户id" 
-                      width="280" 
+                      label="编号" 
+                      width="80" 
                       :show-overflow-tooltip="true">
       </el-table-column>
 
       <el-table-column prop="username" 
-                      label="用户名" 
+                      label="账号" 
+                      width="100" 
+                      :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column prop="realname" 
+                      label="姓名" 
+                      width="100" 
+                      :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column prop="avatar" 
+                      label="头像" 
                       width="180" 
                       :show-overflow-tooltip="true">
       </el-table-column>
 
-      <el-table-column label="性别" width="100" align="center" :show-overflow-tooltip="true">
+      <el-table-column prop="phone" 
+                      label="电话" 
+                      width="150" 
+                      :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column prop="email" 
+                      label="邮箱" 
+                      width="180" 
+                      :show-overflow-tooltip="true">
+      </el-table-column>
+
+      <el-table-column label="性别" width="80" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{scope.row.sex === 1 ? '男':'女'}}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" width="80" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          {{scope.row.locked === 0 ? '锁定' : '正常'}}
         </template>
       </el-table-column>
 
@@ -151,13 +181,13 @@ let getRows = function() {
   this.pageLoading = true;
 
   let params = {
-    page: this.page,
-    size: this.size,
+    offset: this.page,
+    limit: this.size,
     query: this.filters.query
   }
 
   //调用post请求
-  this.$axios.post('/api/user/loadPage', params).then(res => {
+  this.$axios.post('/manage/user/list', params).then(res => {
     this.pageLoading = false;
     if(!res.data || !res.data.rows)
       return;
