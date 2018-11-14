@@ -2,23 +2,31 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-const state = {
-  testMsg: '父组件原始文本',
-  childText: '子组件原始文本'
-}
+// const state = {
+//   testMsg: '原始文本',
+//   childText: '子组件原始文本'
+// }
 
-const mutations = {
-  changeTestMsg(state, str) {
-    state.testMsg = str;
-  },
-  changeChildText(state, str) {
-    state.childText = str;
-  }
-}
+// const mutations = {
+//   changeTestMsg(state, str) {
+//     state.testMsg = str;
+//   },
+//   changeChildText(state, str) {
+//     state.childText = str;
+//   }
+// }
+
+// const store = new Vuex.Store({
+//   state: state,
+//   mutations: mutations
+// })
+
+import dialog_store from './prop_dialog.js'
 
 const store = new Vuex.Store({
-  state: state,
-  mutations: mutations
+  modules: {
+    dialog: dialog_store
+  }
 })
 
 export default store;

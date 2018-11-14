@@ -18,7 +18,10 @@ import ChildSlotNamed from '@/components/ChildSlotNamed'
 import ParentSlotScope from '@/components/ParentSlotScope'
 import ChildSlotScope from '@/components/ChildSlotScope'
 
+// demo
 import VuexParent from '@/demo/vuex/VuexParent'
+import PropParent from '@/demo/prop/PropParent'
+import PropParentVuex from '@/demo/prop/PropParentVuex'
 
 let routes = [
   {
@@ -118,15 +121,25 @@ routes.push({
   path: '/vuexDemo',
   name: 'VuexDemo',
   component: Main,
-  iconCls: 'fa fa-user-circle-o',
+  iconCls: 'fa fa-camera-retro',
   children: [
     {
       path: '/vuexDemo/vuexParent',
       name: 'VuexParent',
       component: VuexParent
+    },
+    {
+      path: '/propDemo/propParent',
+      name: 'PropParent',
+      component: PropParent
+    }, {
+      path: '/propDemo/propParentVuex',
+      name: 'PropParentVuex',
+      component: PropParentVuex
     }
   ]
 })
+
 
 
 const router = new Router({
