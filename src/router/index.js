@@ -23,6 +23,10 @@ import VuexParent from '@/demo/vuex/VuexParent'
 import PropParent from '@/demo/prop/PropParent'
 import PropParentVuex from '@/demo/prop/PropParentVuex'
 
+// upms
+import UpmsUserManage from '@/views/UpmsUserManage'
+import UpmsRoleManage from '@/views/UpmsRoleManage'
+
 let routes = [
   {
     path: '/',
@@ -38,12 +42,30 @@ let routes = [
     component: Main,
     hidden: true,
     children: [{
-      path: '/',
+      path: '/main/index',
       name: '首页',
       component: Dashboard
     }]
   }
 ]
+
+routes.push({
+  path: '/upms',
+  name: '用户角色管理',
+  component: Main,
+  iconCls: 'fa fa-user-circle-o',
+  children: [
+    {
+      path: '/user/data',
+      component: UpmsUserManage,
+      name: '用户管理'
+    }, {
+      path: '/role/data',
+      component: UpmsRoleManage,
+      name: '角色管理'
+    }
+  ]
+})
 
 routes.push({
   path: '/member',

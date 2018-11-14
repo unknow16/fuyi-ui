@@ -1,5 +1,5 @@
 <template>
-  <section>
+   <section>
     <!-- 工具条 -->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
@@ -20,27 +20,23 @@
     </el-col>
 
     <!-- 表格 -->
-    <el-table :data="rows" style="width: 100%;overflow: auto;" :height="clientHeight" 
-              stripe border highlight-current-row v-loading="pageLoading">
-      <el-table-column label="注册日期" width="180">
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{scope.row.date}}</span>
-        </template>
+    <el-table :data="rows" 
+              style="width: 100%; overflow: auto;" 
+              :height="clientHeight"
+              stripe border highlight-current-row 
+              v-loading="pageLoading">
+      <el-table-column prop="userId" 
+                      label="用户id" 
+                      width="280" 
+                      :show-overflow-tooltip="true">
       </el-table-column>
 
-      <el-table-column label="姓名" width="180" :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>姓名： {{scope.row.name}}</p>
-            <p>住址： {{scope.row.address}}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{scope.row.name}}</el-tag>
-            </div>
-          </el-popover>
-        </template>
+      <el-table-column prop="username" 
+                      label="用户名" 
+                      width="180" 
+                      :show-overflow-tooltip="true">
       </el-table-column>
-    
+
       <el-table-column label="性别" width="100" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{scope.row.sex === 1 ? '男':'女'}}
@@ -65,15 +61,15 @@
     <!-- 底部 -->
     <el-col :span="24" class="toolbar">
       <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" 
-          :page-size="size" :total="total" style="float:right;">
+                    :page-size="size" :total="total" style="float:right;">
       </el-pagination>
     </el-col>
 
     <!-- 对话框 -->
     <el-dialog :title="form && form.id ? '编辑':'新增'" :visible.sync="formVisible" :close-on-click-modal="false">
       <el-form :model="form" label-width="100px" :rules="rules" ref="form">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" />
+        <el-form-item label="姓名" prop="username">
+          <el-input v-model="form.username" />
         </el-form-item>
 
         <el-form-item label="性别" prop="sex">
@@ -89,10 +85,11 @@
       </div>
     </el-dialog>
 
-  </section>
+   </section>
 </template>
 
 <script>
+
 const rules = {
   name: [{
     required: true,
@@ -142,85 +139,16 @@ let handleEdit = function(index, row) {
 
 let handleDelete = function(index, row) {
   console.log(index, row);
-
-  if (this.pageLoading)
-    return
-  
-  this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  }).then(() => {
-    this.pageLoading = true
-    this.$axios.get('/api/member/remove/' + row.id).then(res => {
-      this.pageLoading = false
-      
-      if (!res.data.success) {
-        this.$message({
-          type: 'error',
-          message: res.data.message
-        })
-        return
-      }
-
-      this.$message({
-        type: 'success',
-        message: '删除成功'
-      })
-
-      this.page = 1
-      this.getRows()
-
-    }).catch(e => {
-      console.log(" /api/member/remove/' + row.id  ==> error : " + e)
-      this.pageLoading = false
-    })
-  })
 }
 
-let handleSubmit = function() {
-  if (this.formLoading) 
-    return
 
-  this.$refs.form.validate(valid => {
-    if (!valid) 
-      return
-
-    // 网络请求
-    this.$axios.post('/api/member/save', this.form).then(res => {
-      this.formLoading = false
-      
-      if (!res.data.success) {
-        this.$message({
-          showClose: true,
-          message: res.data.message,
-          type: 'error'
-        })
-        return
-      }
-
-      this.$message({
-        type: 'success',
-        message: '保存成功'
-      })
-
-      // 重新载入数据
-      this.page = 1
-      this.getRows()
-      this.formVisible = false
-    }).catch(e => {
-      console.log("/api/member/save  ==> error : " + e)
-      this.formLoading = false
-    })
-  })
-}
 
 let getRows = function() {
-  this.rows = []
+  this.rows = [];
 
-  if (this.pageLoading)
-    return
-  this.pageLoading = true
+  if(this.pageLoading) 
+    return;
+  this.pageLoading = true;
 
   let params = {
     page: this.page,
@@ -229,43 +157,43 @@ let getRows = function() {
   }
 
   //调用post请求
-  this.$axios.post('/api/member/loadPage', params).then(res => {
-    this.pageLoading = false
-    if (!res.data || !res.data.rows)
-      return
-    
-    // 总数赋值
-    this.total = res.data.total
+  this.$axios.post('/api/user/loadPage', params).then(res => {
+    this.pageLoading = false;
+    if(!res.data || !res.data.rows)
+      return;
+
+    // 总是赋值
+    this.total = res.data.total;
     this.page++;
 
     // 页面元素赋值
-    this.rows = res.data.rows
+    this.rows = res.data.rows;
   }).catch(e => {
-    console.log('/api/member/loadPage ===> error : ' + e)
-    this.pageLoading = false
+    console.log('/api/user/loadPage ==> error : ' + e );
+    this.pageLoading = false;
   })
+
 }
 
 let handleCurrentChange = function(val) {
-  this.page = val
-  this.getRows()
+  console.log(val);
+  this.page = val;
+  this.getRows();
 }
 
 let initHeight = function() {
-  this.clientHeight = (document.documentElement.clientHeight - 258) + 'px'
+  this.clientHeight = (document.documentElement.clientHeight - 258) + 'px';
 }
 
 export default {
   data: data,
   methods: {
-    handleQuery,  //查询
-    handleAdd,  //添加
     handleEdit,  //修改
-    handleDelete,  //删除
-    handleCurrentChange,  //页数改变
     getRows, //获取分页
+    handleCurrentChange,  //页数改变
+    handleQuery,  //查询
     initHeight, //初始化高度
-    handleSubmit
+    handleAdd  //添加
   },
   mounted: function() {
     window.addEventListener('resize', this.initHeight)
@@ -274,7 +202,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>
-

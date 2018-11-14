@@ -22,7 +22,7 @@ Vue.prototype.$axios = axios
 
 // 开发模式开启mock.js
 if (process.env.NODE_ENV === 'development') {
-  //require('./mock')
+  require('./mock')
 }
 
 Vue.config.productionTip = false
