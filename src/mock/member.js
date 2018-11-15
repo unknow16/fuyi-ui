@@ -24,6 +24,7 @@ adapters.push(
         result.rows.push(item)
       }
 
+      console.log(result)
       setTimeout(() => {
         resolve([200, result])
       }, 2000)

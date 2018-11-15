@@ -1,10 +1,10 @@
 import Mock from 'mockjs'
 
-let adapters = [];
+let adapters = []
 adapters.push(
-  (mockAdapter) => mockAdapter.onPost('/api/user/loadPage').reply(req => {
+  (mockAdapter) => mockAdapter.onPost('/api/user/list').reply(req => {
     let promise = new Promise((resolve, reject) => {
-      
+    
       let data = req.data ? JSON.parse(req.data) : {
         size: 20
       }

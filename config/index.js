@@ -10,13 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    
+    // 本地axios请求的都是http://localhost:8080/
+    // 通过proxyTable配置转发到target指定的地址，即代理
     proxyTable: {
-      '/manage': {
-        target: 'http://localhost:8080/',
+      '/api': {
+        target: 'http://localhost:8080/', // 将此处配置域名代理到
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/'
-        }
+        // pathRewrite: {
+        //   '^/api': '/'
+        // }
       }
     },
 

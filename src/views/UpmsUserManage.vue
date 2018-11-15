@@ -5,7 +5,7 @@
       <el-form :inline="true" :model="filters">
         
         <el-form-item>
-          <el-input v-model="filters.query" placeholder="姓名/手机号等条件" />
+          <el-input v-model="filters.query" placeholder="账号/姓名等条件" />
         </el-form-item>
 
         <el-form-item>
@@ -13,7 +13,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" v-on:click="handleAdd" icon="el-icon-plus">添加</el-button>
+          <el-button type="primary" v-on:click="handleAdd" icon="el-icon-plus">新增用户</el-button>
         </el-form-item>
 
       </el-form>
@@ -84,6 +84,7 @@
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            
         </template>
       </el-table-column>
     </el-table>
@@ -108,6 +109,7 @@
             <el-radio :label="2">女</el-radio>
           </el-radio-group>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="formVisible = false">取消</el-button>
@@ -181,13 +183,13 @@ let getRows = function() {
   this.pageLoading = true;
 
   let params = {
-    offset: this.page,
-    limit: this.size,
+    page: this.page,
+    size: this.size,
     query: this.filters.query
   }
 
   //调用post请求
-  this.$axios.post('/manage/user/list', params).then(res => {
+  this.$axios.post('/api/user/list', params).then(res => {
     this.pageLoading = false;
     if(!res.data || !res.data.rows)
       return;
@@ -199,7 +201,7 @@ let getRows = function() {
     // 页面元素赋值
     this.rows = res.data.rows;
   }).catch(e => {
-    console.log('/api/user/loadPage ==> error : ' + e );
+    console.log('/api/user/list ==> error : ' + e );
     this.pageLoading = false;
   })
 
