@@ -10,18 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    
-    // 本地axios请求的都是http://localhost:8080/
-    // 通过proxyTable配置转发到target指定的地址，即代理
-    proxyTable: {
-      '/api': {
-        target: 'http://localhost:8080/', // 将此处配置域名代理到
-        changeOrigin: true,
-        // pathRewrite: {
-        //   '^/api': '/'
-        // }
-      }
-    },
+    proxyTable: {},
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -31,7 +20,14 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
+    // Use Eslint Loader?
+    // If true, your code will be linted during bundling and
+    // linting errors and warnings will be shown in the console.
+    useEslint: true,
+    // If true, eslint errors and warnings will also be shown in the error overlay
+    // in the browser.
+    showEslintErrorsInOverlay: false,
+
     /**
      * Source Maps
      */
