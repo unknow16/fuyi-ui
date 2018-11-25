@@ -29,7 +29,7 @@
         checked: true,
         loginForm: {
           username: 'fuyi',
-          password: 'fuyi'
+          password: '123'
         },
         loading: false
       }

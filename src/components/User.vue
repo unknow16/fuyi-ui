@@ -69,7 +69,7 @@
 
             <el-table-column label="状态" width="80" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
-                {{scope.row.locked === 0 ? '锁定' : '正常'}}
+                {{scope.row.locked === 1 ? '锁定' : '正常'}}
                 </template>
             </el-table-column>
 
@@ -92,28 +92,50 @@
         <!-- 底部 -->
         <el-col :span="24" class="toolbar">
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" 
-                            :page-size="size" :total="total" style="float:right;">
+                           :current-page="page" :page-size="size" :total="total" style="float:right;">
             </el-pagination>
         </el-col>
 
         <!-- 对话框 -->
-        <el-dialog :title="form && form.id ? '编辑':'新增'" :visible.sync="formVisible" :close-on-click-modal="false">
+        <el-dialog :title="form && form.userId ? '编辑':'新增'" :visible.sync="formVisible" :close-on-click-modal="false">
             <el-form :model="form" label-width="100px" :rules="rules" ref="form">
-                <el-form-item label="姓名" prop="username">
-                <el-input v-model="form.username" />
+                <el-form-item label="账号" prop="username">
+                    <el-input v-model="form.username" />
+                </el-form-item>
+                <el-form-item label="密码" prop="password" v-if="!(form && form.userId)">
+                    <el-input v-model="form.password" />
+                </el-form-item>
+                <el-form-item label="姓名" prop="realname">
+                    <el-input v-model="form.realname" />
+                </el-form-item>
+                <el-form-item label="头像" prop="avatar">
+                    <el-input v-model="form.avatar" />
+                </el-form-item>
+                <el-form-item label="电话" prop="phone">
+                    <el-input v-model="form.phone" />
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="form.email" />
                 </el-form-item>
 
                 <el-form-item label="性别" prop="sex">
-                <el-radio-group v-model="form.sex">
-                    <el-radio :label="1">男</el-radio>
-                    <el-radio :label="2">女</el-radio>
-                </el-radio-group>
+                    <el-radio-group v-model="form.sex">
+                        <el-radio :label="1">男</el-radio>
+                        <el-radio :label="2">女</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+
+                <el-form-item label="状态" prop="locked">
+                    <el-radio-group v-model="form.sex">
+                        <el-radio :label="0">正常</el-radio>
+                        <el-radio :label="1">锁定</el-radio>
+                    </el-radio-group>
                 </el-form-item>
 
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click.native="formVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="handleSubmit" :loading="formLoading">提交</el-button>
+                <el-button type="primary" @click.native="handleSubmit('form')" :loading="formLoading">提交</el-button>
             </div>
         </el-dialog>
     </section>
@@ -169,10 +191,56 @@ let handleEdit = function(index, row) {
 }
 
 let handleDelete = function(index, row) {
-  console.log(index, row);
+    console.log(index, row);
+
+    if (this.pageLoading)
+        return
+  
+  this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    this.pageLoading = true
+    this.getRequest('/manage/user/delete/' + row.userId).then(resp => {
+      this.pageLoading = false
+
+        // 重新载入数据
+        this.page = 1
+        this.getRows()
+    })
+  })
 }
 
+let handleSubmit = function(formName) {
+    if(this.formLoading)
+        return true
 
+    this.$refs[formName].validate((valid) => {
+      if(!valid)
+        return
+        
+        var path = '/manage/user/';
+        if(this.form.userId) {
+            path += 'update/' + this.form.userId;
+        } else {
+            path += 'create';
+        }
+
+        this.postRequest4Json(path, this.form).then(resp => {
+                this.formLoading = false;
+                if(resp && resp.status == 200) {
+                    let data = resp.data;
+                }
+
+                // 重新载入数据
+                this.page = 1
+                this.getRows()
+                this.formVisible = false
+            });
+
+    })
+}
 
 let getRows = function() {
     var _this = this;
@@ -211,7 +279,9 @@ export default {
     handleCurrentChange,  //页数改变
     handleQuery,  //查询
     initHeight, //初始化高度
-    handleAdd  //添加
+    handleAdd,  //添加
+    handleSubmit, //提交
+    handleDelete //删除
   },
   mounted: function() {
     //window.addEventListener('resize', this.initHeight)
