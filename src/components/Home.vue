@@ -48,6 +48,7 @@
               <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
               <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
             </el-breadcrumb>
+            <Dashboard/>
             <!-- <keep-alive>
               <router-view v-if="this.$route.meta.keepAlive"></router-view>
             </keep-alive>
@@ -59,6 +60,8 @@
   </div>
 </template>
 <script>
+import Dashboard from './Dashboard'
+
   export default{
     mounted: function () {
 //      this.devMsg();
@@ -126,6 +129,9 @@
       routes(){
         return this.$store.state.routes;
       }
+    },
+    components: {
+      Dashboard: Dashboard
     }
   }
 </script>
