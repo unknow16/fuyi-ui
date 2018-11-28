@@ -78,8 +78,19 @@
                 <el-button
                     size="mini"
                     type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-
+                    @click="handleEdit(scope.$index, scope.row)">编辑用户</el-button>
+                <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handleOrganization(scope.$index, scope.row)">用户组织</el-button>
+                <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handleRole(scope.$index, scope.row)">用户角色</el-button>
+                <el-button
+                    size="mini"
+                    type="primary"
+                    @click="handlePermission(scope.$index, scope.row)">用户权限</el-button>
                 <el-button
                     size="mini"
                     type="danger"
@@ -109,7 +120,15 @@
                     <el-input v-model="form.realname" />
                 </el-form-item>
                 <el-form-item label="头像" prop="avatar">
-                    <el-input v-model="form.avatar" />
+                    <el-row>
+                        <el-col :span="18">
+                            <el-input v-model="form.avatar"></el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button type="success" @click.prevent="handleDelete(scope.$index, scope.row)">上传头像</el-button>
+                        </el-col>
+                    </el-row>
+                    
                 </el-form-item>
                 <el-form-item label="电话" prop="phone">
                     <el-input v-model="form.phone" />
@@ -118,19 +137,27 @@
                     <el-input v-model="form.email" />
                 </el-form-item>
 
-                <el-form-item label="性别" prop="sex">
-                    <el-radio-group v-model="form.sex">
-                        <el-radio :label="1">男</el-radio>
-                        <el-radio :label="2">女</el-radio>
-                    </el-radio-group>
-                </el-form-item>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="性别" prop="sex">
+                            <el-radio-group v-model="form.sex">
+                                <el-radio :label="1">男</el-radio>
+                                <el-radio :label="2">女</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="状态" prop="locked">
+                            <el-radio-group v-model="form.sex">
+                                <el-radio :label="0">正常</el-radio>
+                                <el-radio :label="1">锁定</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                
 
-                <el-form-item label="状态" prop="locked">
-                    <el-radio-group v-model="form.sex">
-                        <el-radio :label="0">正常</el-radio>
-                        <el-radio :label="1">锁定</el-radio>
-                    </el-radio-group>
-                </el-form-item>
+                
 
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -144,22 +171,37 @@
 <script>
 
 const rules = {
-  name: [{
+  username: [{
+    required: true,
+    message: '请输入账号',
+    trigger: 'blur'
+  }],
+  password: [{
+    required: true,
+    message: '请输入密码',
+    trigger: 'blur'
+  }],
+  realname: [{
     required: true,
     message: '请输入姓名',
     trigger: 'blur'
   }],
-  sex: [{
+  phone: [{
     required: true,
-    message: '请选择性别',
-    trigger: 'change'
+    message: '请输入',
+    trigger: 'blur'
+  }],
+  email: [{
+    required: true,
+    message: '请输入邮箱',
+    trigger: 'blur'
   }]
 }
 
 let data = () => {
   return {
     page: 1, //页码
-    size: 5, //每页数量
+    size: 10, //每页数量
     total: 0,  //总数
     filters: {query: ''}, //查询条件
     rows: [], //页面数据
@@ -269,6 +311,18 @@ let handleCurrentChange = function(val) {
 
 let initHeight = function() {
   this.clientHeight = (document.documentElement.clientHeight - 258) + 'px';
+}
+
+let handleOrganization = function() {
+
+}
+
+let handleRole = function() {
+
+}
+
+let handlePermission = function() {
+
 }
 
 export default {
