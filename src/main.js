@@ -27,19 +27,16 @@ router.beforeEach((to, from, next)=> {
     next();
     return;
   }
+
+  // 此处获取name时，一定会有值
   var name = store.state.user.username;
   console.log("login username = " + name);
 
   if (name == 'noLogin') {
-    if (to.meta.requireAuth || to.name == null) {
-      next({path: '/', query: {redirect: to.path}})
-    } else {
-      next();
-    }
+    // 未登录跳到'/login',并带上重定向参数
+    next({path: '/login', query: {redirect: to.path}})
   } else {
     initMenu(router, store);
-    // if(to.path=='/chat')
-    //   store.commit("updateMsgList", []);
     next();
   }
 }

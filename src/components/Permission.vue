@@ -228,7 +228,7 @@ let handleSubmit = function(formName) {
       if(!valid)
         return
         
-        var path = '/manage/user/';
+        var path = '/manage/permission/';
         if(this.form.userId) {
             path += 'update/' + this.form.userId;
         } else {
