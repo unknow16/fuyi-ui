@@ -18,11 +18,15 @@ const store = new Vuex.Store({
     mutations: {
         initMenu(state, menus){
             state.routes = menus;
-          },
+        },
         login(state, user){
             state.user = user;
             ls.setItem('user', JSON.stringify(user));
-        }
+        },
+        logout(state){
+            window.localStorage.removeItem('user');
+            state.routes = [];
+        },
     },
     actions: {
 

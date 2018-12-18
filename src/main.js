@@ -39,8 +39,7 @@ router.beforeEach((to, from, next)=> {
     initMenu(router, store);
     next();
   }
-}
-)
+})
 
 // eslint-disable-next-line
 new Vue({

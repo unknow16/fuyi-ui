@@ -5,7 +5,7 @@
             <el-form :inline="true" :model="filters" style="float: left; margin-top: 15px">
                 
                 <el-form-item>
-                    <el-input v-model="filters.query" placeholder="账号/姓名等条件" />
+                    <el-input v-model="filters.query" placeholder="角色名称/角色标题等条件" />
                 </el-form-item>
 
                 <el-form-item>
@@ -32,13 +32,13 @@
 
             <el-table-column prop="name" 
                             label="角色名称" 
-                            width="150" 
+                            width="250" 
                             :show-overflow-tooltip="true">
             </el-table-column>
 
             <el-table-column prop="title" 
                             label="角色标题" 
-                            width="100" 
+                            width="200" 
                             :show-overflow-tooltip="true">
             </el-table-column>
 

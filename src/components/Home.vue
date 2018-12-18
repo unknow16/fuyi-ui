@@ -144,7 +144,7 @@ import Dashboard from './Dashboard'
   }
 
   .home-header {
-    background-color: #20a0ff;
+    background-color: #223158;
     color: #333;
     text-align: center;
     display: flex;

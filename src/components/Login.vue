@@ -28,8 +28,8 @@
         },
         checked: true,
         loginForm: {
-          username: 'fuyi',
-          password: '123'
+          username: 'root',
+          password: 'root'
         },
         loading: false
       }
