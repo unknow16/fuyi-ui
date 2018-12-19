@@ -166,6 +166,7 @@ const rules = {
 
 let data = () => {
   return {
+    isEdit: false,
     page: 1, //页码
     size: 10, //每页数量
     total: 0,  //总数
@@ -189,6 +190,7 @@ let handleAdd = function() {
   this.form = {}
   this.form.sex = 1
   this.formVisible = true
+  this.isEdit = false
 }
 
 let handleEdit = function(index, row) {
@@ -196,6 +198,7 @@ let handleEdit = function(index, row) {
   
   this.form = Object.assign({}, row)
   this.formVisible = true
+  this.isEdit = true
 }
 
 let handleDelete = function(index, row) {
@@ -229,7 +232,7 @@ let handleSubmit = function(formName) {
         return
         
         var path = '/manage/permission/';
-        if(this.form.permissionId) {
+        if(this.isEdit) {
             path += 'update/' + this.form.permissionId;
         } else {
             path += 'create';

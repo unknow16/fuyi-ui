@@ -10,7 +10,8 @@ import {getRequest, postRequest4Form, postRequest4Json, deleteRequest, putReques
 import {initMenu} from './utils/common-api'
 
 import 'font-awesome/css/font-awesome.min.css'
-import './assets/theme/element-#409eff/index.css'
+//import './assets/theme/element-#409eff/index.css'
+import './assets/theme/element-#1F2225/index.css'
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false

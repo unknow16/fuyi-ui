@@ -23,7 +23,15 @@ const router = new Router({
       path: '/home',
       name: '主页',
       component: Home,
-      hidden: true
+      hidden: true,
+      children: [
+        {
+          path: 'dashboard',
+          name: '主页',
+          component: Dashboard,
+          hidden: true
+        }
+      ]
     }
   ]
 })

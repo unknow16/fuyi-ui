@@ -39,7 +39,7 @@
 
             <el-table-column prop="realname" 
                             label="姓名" 
-                            width="100" 
+                            width="200" 
                             :show-overflow-tooltip="true">
             </el-table-column>
 
@@ -89,10 +89,6 @@
                     @click="handleRole(scope.$index, scope.row)">用户角色</el-button>
                 <el-button
                     size="mini"
-                    type="primary"
-                    @click="handlePermission(scope.$index, scope.row)">用户权限</el-button>
-                <el-button
-                    size="mini"
                     type="danger"
                     @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     
@@ -108,7 +104,7 @@
         </el-col>
 
         <!-- 对话框 -->
-        <el-dialog :title="form && form.userId ? '编辑':'新增'" :visible.sync="formVisible" :close-on-click-modal="false">
+        <el-dialog :title="form && form.userId ? '编辑用户':'新增用户'" :visible.sync="formVisible" :close-on-click-modal="false">
             <el-form :model="form" label-width="100px" :rules="rules" ref="form">
                 <el-form-item label="账号" prop="username">
                     <el-input v-model="form.username" />
@@ -148,16 +144,13 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="状态" prop="locked">
-                            <el-radio-group v-model="form.sex">
+                            <el-radio-group v-model="form.locked">
                                 <el-radio :label="0">正常</el-radio>
                                 <el-radio :label="1">锁定</el-radio>
                             </el-radio-group>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                
-
-                
 
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -165,10 +158,24 @@
                 <el-button type="primary" @click.native="handleSubmit('form')" :loading="formLoading">提交</el-button>
             </div>
         </el-dialog>
+
+        <el-dialog  title="分配用户角色"
+                    :visible.sync="userRoleVisible"
+                    width="30%">
+            
+            <el-transfer v-model="userRoleList" :data="roleList" :props="roleProps"></el-transfer>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="userRoleVisible = false">取 消</el-button>
+                <el-button type="primary" @click="handleUserRoleSubmit">确 定</el-button>
+            </span>
+        </el-dialog>
+        
     </section>
 </template>
 
 <script>
+
 
 const rules = {
   username: [{
@@ -188,7 +195,7 @@ const rules = {
   }],
   phone: [{
     required: true,
-    message: '请输入',
+    message: '请输入手机号',
     trigger: 'blur'
   }],
   email: [{
@@ -210,7 +217,11 @@ let data = () => {
     form: {},  //表单数据
     rules: rules, //验证规则
     formVisible: false, //对话框隐藏状态
-    formLoading: false  //表单提交状态
+    formLoading: false,  //表单提交状态
+    userRoleVisible: false, // 分配用户角色对话框状态
+    userRoleList: [],
+    roleList: [],
+    roleProps: {key: 'roleId', label: 'title'}
   }
 }
 
@@ -222,6 +233,7 @@ let handleQuery = function() {
 let handleAdd = function() {
   this.form = {}
   this.form.sex = 1
+  this.form.locked = 0
   this.formVisible = true
 }
 
@@ -318,11 +330,30 @@ let handleOrganization = function() {
 }
 
 let handleRole = function() {
+    this.userRoleVisible = true;
 
+    this.pageLoading = true;
+    this.getRequest('/manage/role/list?pageNum=0&pageSize=10').then(resp => {
+        this.pageLoading = false;
+        if(resp && resp.status == 200) {
+            let data = resp.data;
+            this.roleList = data.rows;
+        }
+    })
+
+    let roles = this.$store.state.user.roles;
+    roles.forEach(role => {
+        this.userRoleList.push(role.roleId);
+    });
 }
 
-let handlePermission = function() {
+let handleUserRoleSubmit = function() {
+    this.userRoleVisible = false;
 
+    this.pageLoading = true;
+    this.postRequest4Json('manage/user/assignRoles', this.userRoleList).then(resp => {
+        this.pageLoading = false;
+    })
 }
 
 export default {
@@ -335,7 +366,10 @@ export default {
     initHeight, //初始化高度
     handleAdd,  //添加
     handleSubmit, //提交
-    handleDelete //删除
+    handleDelete, //删除
+    handleRole,
+    handleUserRoleSubmit,
+    handleOrganization
   },
   mounted: function() {
     //window.addEventListener('resize', this.initHeight)
