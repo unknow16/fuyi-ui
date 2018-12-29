@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken } from '@/utils/token'
 
 // create an axios instance
 const service = axios.create({
@@ -16,20 +16,34 @@ service.interceptors.request.use(
     // Do something before request is sent
     if (store.getters.token) {
       // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-      config.headers['Authorization'] = getToken()
+      config.headers['Authorization'] = "Bearer " + getToken()
     }
     return config
   },
   error => {
     // Do something with request error
+    Message.error({message: '请求超时!'});
     console.log(error) // for debug
     Promise.reject(error)
   }
 )
 
 // response interceptor
-service.interceptors.response.use(
-  response => response,
+service.interceptors.response.use(response => {
+    console.log(response)
+
+    // http请求成功，且有提示语返回，就弹框提示
+    if (response.status && response.status == 200 && response.data.message) {
+      // 状态码：1成功，其他为失败
+      if(response.data.code == 1) {
+        Message.success({message: response.data.message});
+      } else {
+        Message.error({message: response.data.message});
+      }
+      console.log(response.data.data)
+      return response.data.data;
+    }    
+  },
   /**
    * 下面的注释为通过在response里，自定义code来标示请求状态
    * 当code返回如下情况则说明权限有问题，登出并返回到登录页

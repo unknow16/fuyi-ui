@@ -69,7 +69,7 @@
 
 let data = () => {
   return {
-    //
+    hello: 'hello'
   }
 }
 

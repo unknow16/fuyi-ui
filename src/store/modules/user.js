@@ -1,42 +1,20 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { loginByUsername, logout, getUserInfo, getUserRouteMenu } from '@/api/login'
+import { getToken, setToken, removeToken } from '@/utils/token'
 
 const user = {
   state: {
-    user: '',
-    status: '',
-    code: '',
     token: getToken(),
-    name: '',
-    avatar: '',
-    introduction: '',
+    userInfo: null,
     roles: [],
-    setting: {
-      articlePlatform: []
-    }
+    routes: []
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
-    SET_SETTING: (state, setting) => {
-      state.setting = setting
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status
-    },
-    SET_NAME: (state, name) => {
-      state.name = name
-    },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
+    SET_USER_INFO: (state, userInfo) => {
+      state.userInfo = userInfo
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -48,12 +26,9 @@ const user = {
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          
-          const data = response.data.data
-          console.log(data)
-          commit('SET_TOKEN', data.token)
-          setToken(data.token)
+        loginByUsername(username, userInfo.password).then(response => {        
+          commit('SET_TOKEN', response.token) // token存入store中
+          setToken(response.token) // token存入cookie中
           resolve()
         }).catch(error => {
           reject(error)
@@ -62,24 +37,30 @@ const user = {
     },
 
     // 获取用户信息
-    GetUserInfo({ commit, state }) {
+    GetUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-            reject('error')
-          }
-          const data = response.data
+        getUserInfo().then(response => {
+          console.log(11)
+          console.log(response)
+          // if (response.roles && response.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+          //   commit('SET_ROLES', response.roles)
+          //   commit('SET_USER_INFO', response)
+          // } else {
+          //   reject('getInfo: roles must be a non-null array !')
+          // }
+          resolve()
+          console.log(22)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
 
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
-          } else {
-            reject('getInfo: roles must be a non-null array !')
-          }
-
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
+    GetUserRouteMenu({ commit }) {
+      return new Promise((resolve, reject) => {
+        getUserRouteMenu().then(response => {
+          console.log(response)
+          resolve()
         }).catch(error => {
           reject(error)
         })

@@ -19,11 +19,17 @@ export function logout() {
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo() {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: '/user/getUserInfo',
+    method: 'post'
+  })
+}
+
+export function getUserRouteMenu() {
+  return request({
+    url: '/permission/initMenu',
+    method: 'get'
   })
 }
 
