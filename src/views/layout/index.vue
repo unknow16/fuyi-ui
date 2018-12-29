@@ -75,10 +75,10 @@ let data = () => {
 
 let computed = {
   user(){
-    return this.$store.state.user;
+    return this.$store.getters.userInfo;
   },
   routes(){
-    return this.$store.state.routes;
+    return this.$store.getters.routes;
   }
 }
 

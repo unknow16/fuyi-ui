@@ -18,6 +18,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ROUTES: (state, routes) => {
+      state.routes = routes
     }
   },
 
@@ -40,16 +43,13 @@ const user = {
     GetUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
-          console.log(11)
-          console.log(response)
-          // if (response.roles && response.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-          //   commit('SET_ROLES', response.roles)
-          //   commit('SET_USER_INFO', response)
-          // } else {
-          //   reject('getInfo: roles must be a non-null array !')
-          // }
+          if (response.roles && response.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', response.roles)
+            commit('SET_USER_INFO', response)
+          } else {
+            reject('getInfo: roles must be a non-null array !')
+          }
           resolve()
-          console.log(22)
         }).catch(error => {
           reject(error)
         })
@@ -59,8 +59,7 @@ const user = {
     GetUserRouteMenu({ commit }) {
       return new Promise((resolve, reject) => {
         getUserRouteMenu().then(response => {
-          console.log(response)
-          resolve()
+          resolve(response)
         }).catch(error => {
           reject(error)
         })

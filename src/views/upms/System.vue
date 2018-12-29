@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import { getList } from '@/api/upms.js'
 
 const rules = {
   title: [{
@@ -226,14 +227,20 @@ let getRows = function() {
     return;
 
     this.pageLoading = true;
-    this.getRequest('/manage/system/list?pageNum=' + _this.page + '&pageSize=' + _this.size + '&query=' + _this.filters.query ).then(resp=> {
-        this.pageLoading = false;
-        if (resp && resp.status == 200) {
-            var data = resp.data;
-            this.total = data.total;
-            this.rows = data.rows;
-        }
-    });
+    getList(_this.page, _this.size, _this.filters.query).then(resp => {
+        console.log(resp)
+        this.pageLoading = false
+        this.total = resp.total;
+        this.rows = resp.rows;
+    })
+    // this.getRequest('/manage/system/list?pageNum=' + _this.page + '&pageSize=' + _this.size + '&query=' + _this.filters.query ).then(resp=> {
+    //     this.pageLoading = false;
+    //     if (resp && resp.status == 200) {
+    //         var data = resp.data;
+    //         this.total = data.total;
+    //         this.rows = data.rows;
+    //     }
+    // });
 
 }
 

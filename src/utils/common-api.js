@@ -39,10 +39,10 @@ const formatRoutes = (routes)=> {
         path: path,
         //component: resolve => require(['../components/HelloWorld.vue'], resolve),
         component(resolve){
-            if (component.startsWith("Home")) {
-                //require(['../views/Home.vue'], resolve)
+            if (component.startsWith("Layout")) {
+                require(['../views/layout/index.vue'], resolve)
             } else {
-                //require(['../views/'+ component +'.vue'], resolve)
+                require(['../views/'+ component +'.vue'], resolve)
             }
           },
         name: name,

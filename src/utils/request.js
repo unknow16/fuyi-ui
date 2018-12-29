@@ -40,9 +40,8 @@ service.interceptors.response.use(response => {
       } else {
         Message.error({message: response.data.message});
       }
-      console.log(response.data.data)
-      return response.data.data;
-    }    
+    }
+    return response.data.data;
   },
   /**
    * 下面的注释为通过在response里，自定义code来标示请求状态
