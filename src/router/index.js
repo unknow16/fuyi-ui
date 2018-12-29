@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
-import Home from '@/components/Home'
-import Dashboard from '@/components/Dashboard'
+import Login from '@/views/login'
+import Home from '@/views/Home'
+import Dashboard from '@/views/Dashboard'
 
 Vue.use(Router)
 
@@ -27,7 +27,7 @@ const router = new Router({
       children: [
         {
           path: 'dashboard',
-          name: '主页',
+          name: '控制台',
           component: Dashboard,
           hidden: true
         }

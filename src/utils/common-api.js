@@ -1,7 +1,7 @@
 import {getRequest} from './axios-request'
 
 const _import = (file, path) => {
-    if (!path) path = 'components'
+    if (!path) path = 'views'
     return require(`../${path}/${file}.vue`)
   }
 
@@ -40,9 +40,9 @@ const formatRoutes = (routes)=> {
         //component: resolve => require(['../components/HelloWorld.vue'], resolve),
         component(resolve){
             if (component.startsWith("Home")) {
-                require(['../components/Home.vue'], resolve)
+                require(['../views/Home.vue'], resolve)
             } else {
-                require(['../components/'+ component +'.vue'], resolve)
+                require(['../views/'+ component +'.vue'], resolve)
             }
           },
         name: name,
