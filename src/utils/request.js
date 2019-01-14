@@ -7,7 +7,7 @@ import { getToken } from '@/utils/token'
 const service = axios.create({
   //此处不设值的话，就会去config/index.js中的proxyTable
   //baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 5000 // request timeout
+  timeout: 9000 // request timeout
 })
 
 // request interceptor

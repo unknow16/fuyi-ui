@@ -6,7 +6,7 @@ export function loginByUsername(username, password) {
     password
   }
   return request({
-    url: '/auth/getToken',
+    url: '/upms/auth/getToken',
     method: 'post',
     data
   })
@@ -21,14 +21,14 @@ export function logout() {
 
 export function getUserInfo() {
   return request({
-    url: '/user/getUserInfo',
+    url: '/upms/user/getUserInfo',
     method: 'post'
   })
 }
 
 export function getUserRouteMenu() {
   return request({
-    url: '/permission/initMenu',
+    url: '/upms/permission/initMenu',
     method: 'get'
   })
 }
