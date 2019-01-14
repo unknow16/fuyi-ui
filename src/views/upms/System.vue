@@ -118,7 +118,6 @@
 </template>
 
 <script>
-import { getList } from '@/api/upms.js'
 
 const rules = {
   title: [{

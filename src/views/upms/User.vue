@@ -176,6 +176,7 @@
 
 <script>
 
+import {getList, addUser, updateUser, deleteUser} from '@/api/upms/user'
 
 const rules = {
   username: [{
@@ -256,12 +257,15 @@ let handleDelete = function(index, row) {
     type: 'warning'
   }).then(() => {
     this.pageLoading = true
-    this.getRequest('/manage/user/delete/' + row.userId).then(resp => {
-      this.pageLoading = false
+    new Promise((resolve, reject) => {
+        deleteUser(row.userId).then(resp => {
+            this.pageLoading = false
 
-        // 重新载入数据
-        this.page = 1
-        this.getRows()
+            this.page = 1
+            this.getRows()
+        })
+    }).catch((error) => {
+        reject(error)
     })
   })
 }
@@ -276,23 +280,31 @@ let handleSubmit = function(formName) {
         
         var path = '/manage/user/';
         if(this.form.userId) {
-            path += 'update/' + this.form.userId;
+            
+            new Promise((resolve, reject) => {
+                updateUser(this.form.userId, this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
+            
         } else {
-            path += 'create';
+
+            new Promise((resolve, reject) => {
+                addUser(this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
         }
-
-        this.postRequest4Json(path, this.form).then(resp => {
-                this.formLoading = false;
-                if(resp && resp.status == 200) {
-                    let data = resp.data;
-                }
-
-                // 重新载入数据
-                this.page = 1
-                this.getRows()
-                this.formVisible = false
-            });
-
     })
 }
 
@@ -304,15 +316,16 @@ let getRows = function() {
     return;
 
     this.pageLoading = true;
-    this.getRequest('/manage/user/list?pageNum=' + _this.page + '&pageSize=' + _this.size + '&query=' + _this.filters.query ).then(resp=> {
-        this.pageLoading = false;
-        if (resp && resp.status == 200) {
-            var data = resp.data;
-            this.total = data.total;
-            this.rows = data.rows;
-        }
-    });
-
+    new Promise((resolve, reject) => {
+        getList(_this.page, _this.size, _this.filters.query).then(response => {  
+            this.pageLoading = false;      
+            this.total = response.total;
+            this.rows = response.rows;
+            resolve()
+        }).catch(error => {
+            reject(error)
+        })
+    })
 }
 
 let handleCurrentChange = function(val) {
@@ -372,8 +385,6 @@ export default {
     handleOrganization
   },
   mounted: function() {
-    //window.addEventListener('resize', this.initHeight)
-    //this.initHeight()
     this.getRows()
   }
 }

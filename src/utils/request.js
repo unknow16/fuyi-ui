@@ -30,7 +30,7 @@ service.interceptors.request.use(
 
 // response interceptor
 service.interceptors.response.use(response => {
-    console.log(response)
+    console.log('resp ==> ', response)
 
     // http请求成功，且有提示语返回，就弹框提示
     if (response.status && response.status == 200 && response.data.message) {
