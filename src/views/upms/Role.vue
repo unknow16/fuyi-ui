@@ -117,6 +117,8 @@
 
 <script>
 
+import {getList, addRole, updateRole, deleteRole, rolePermission, updateRolePermission} from '@/api/upms/role'
+
 const rules = {
   name: [{
     required: true,
@@ -181,13 +183,18 @@ let handleDelete = function(index, row) {
     type: 'warning'
   }).then(() => {
     this.pageLoading = true
-    this.getRequest('/manage/role/delete/' + row.roleId).then(resp => {
-      this.pageLoading = false
 
-        // 重新载入数据
-        this.page = 1
-        this.getRows()
+    new Promise((resolve, reject) => {
+        deleteRole(row.roleId).then(resp => {
+            this.pageLoading = false
+
+            this.page = 1
+            this.getRows()
+        })
+    }).catch((error) => {
+        reject(error)
     })
+
   })
 }
 
@@ -199,24 +206,31 @@ let handleSubmit = function(formName) {
       if(!valid)
         return
         
-        var path = '/manage/role/';
         if(this.form.roleId) {
-            path += 'update/' + this.form.roleId;
+
+            new Promise((resolve, reject) => {
+                updateRole(this.form.roleId, this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
+
         } else {
-            path += 'create';
+            new Promise((resolve, reject) => {
+                addRole(this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
         }
-
-        this.postRequest4Json(path, this.form).then(resp => {
-                this.formLoading = false;
-                if(resp && resp.status == 200) {
-                    let data = resp.data;
-                }
-
-                // 重新载入数据
-                this.page = 1
-                this.getRows()
-                this.formVisible = false
-            });
 
     })
 }
@@ -229,15 +243,16 @@ let getRows = function() {
     return;
 
     this.pageLoading = true;
-    this.getRequest('/manage/role/list?pageNum=' + _this.page + '&pageSize=' + _this.size + '&query=' + _this.filters.query ).then(resp=> {
-        this.pageLoading = false;
-        if (resp && resp.status == 200) {
-            var data = resp.data;
-            this.total = data.total;
-            this.rows = data.rows;
-        }
-    });
-
+    new Promise((resolve, reject) => {
+        getList(_this.page, _this.size, _this.filters.query).then(response => {  
+            this.pageLoading = false;      
+            this.total = response.total;
+            this.rows = response.rows;
+            resolve()
+        }).catch(error => {
+            reject(error)
+        })
+    })
 }
 
 let handleCurrentChange = function(val) {
@@ -259,14 +274,17 @@ let handleRolePermission = function(index, row) {
 
     this.pageLoading = true;
     this.roleId = row.roleId;
-    this.getRequest('/manage/role/permission/' + row.roleId).then(resp=> {
-        this.pageLoading = false;
-        if (resp && resp.status == 200) {
-            var data = resp.data;
-            this.checkedPermission = data.checkedPermission;
-            this.rolePermissionData = data.allPermission;
-        }
-    });
+
+    new Promise((resolve, reject) => {
+        rolePermission(row.roleId).then(response => {  
+            this.pageLoading = false;      
+            this.checkedPermission = response.checkedPermission;
+            this.rolePermissionData = response.allPermission;
+            resolve()
+        }).catch(error => {
+            reject(error)
+        })
+    })
 }
 
 let handleSubmitTree = function() {
@@ -276,9 +294,16 @@ let handleSubmitTree = function() {
 
     this.formLoading = true;
     let checkedArray = this.$refs.rolePermissionTree.getCheckedKeys();
-    this.postRequest4Json('/manage/role/permission/' + this.roleId, checkedArray).then(resp =>{
-        this.formLoading = false;
-    });
+    
+    new Promise((resolve, reject) => {
+        updateRolePermission(this.roleId, checkedArray).then(response => {  
+            this.pageLoading = false;      
+            this.formLoading = false;
+            resolve()
+        }).catch(error => {
+            reject(error)
+        })
+    })
     this.treeVisible = false;
 }
 

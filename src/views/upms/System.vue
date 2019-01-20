@@ -119,6 +119,8 @@
 
 <script>
 
+import {getList, add, update, dels} from '@/api/upms/system'
+
 const rules = {
   title: [{
     required: true,
@@ -178,12 +180,15 @@ let handleDelete = function(index, row) {
     type: 'warning'
   }).then(() => {
     this.pageLoading = true
-    this.getRequest('/manage/system/delete/' + row.systemId).then(resp => {
-      this.pageLoading = false
+    new Promise((resolve, reject) => {
+        dels(row.systemId).then(resp => {
+            this.pageLoading = false
 
-        // 重新载入数据
-        this.page = 1
-        this.getRows()
+            this.page = 1
+            this.getRows()
+        })
+    }).catch((error) => {
+        reject(error)
     })
   })
 }
@@ -196,24 +201,32 @@ let handleSubmit = function(formName) {
       if(!valid)
         return
         
-        var path = '/manage/system/';
         if(this.form.systemId) {
-            path += 'update/' + this.form.systemId;
+            
+            new Promise((resolve, reject) => {
+                update(this.form.systemId, this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
+
         } else {
-            path += 'create';
+            
+            new Promise((resolve, reject) => {
+                add(this.form).then( response => {
+                    this.formLoading = false
+                    this.page = 1
+                    this.getRows()
+                    this.formVisible = false
+                })
+            }).catch(error => {
+                reject(error)
+            })
         }
-
-        this.postRequest4Json(path, this.form).then(resp => {
-                this.formLoading = false;
-                if(resp && resp.status == 200) {
-                    let data = resp.data;
-                }
-
-                // 重新载入数据
-                this.page = 1
-                this.getRows()
-                this.formVisible = false
-            });
 
     })
 }
@@ -226,21 +239,16 @@ let getRows = function() {
     return;
 
     this.pageLoading = true;
-    getList(_this.page, _this.size, _this.filters.query).then(resp => {
-        console.log(resp)
-        this.pageLoading = false
-        this.total = resp.total;
-        this.rows = resp.rows;
+    new Promise((resolve, reject) => {
+        getList(_this.page, _this.size, _this.filters.query).then(response => {  
+            this.pageLoading = false;      
+            this.total = response.total;
+            this.rows = response.rows;
+            resolve()
+        }).catch(error => {
+            reject(error)
+        })
     })
-    // this.getRequest('/manage/system/list?pageNum=' + _this.page + '&pageSize=' + _this.size + '&query=' + _this.filters.query ).then(resp=> {
-    //     this.pageLoading = false;
-    //     if (resp && resp.status == 200) {
-    //         var data = resp.data;
-    //         this.total = data.total;
-    //         this.rows = data.rows;
-    //     }
-    // });
-
 }
 
 let handleCurrentChange = function(val) {

@@ -278,7 +278,6 @@ let handleSubmit = function(formName) {
       if(!valid)
         return
         
-        var path = '/manage/user/';
         if(this.form.userId) {
             
             new Promise((resolve, reject) => {
